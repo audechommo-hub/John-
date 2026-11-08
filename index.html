@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a1226">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>XACE IA Search</title>
+<style>
+:root{--bg:#0a1226;--card:#121c38;--line:#22305a;--txt:#eaf1ff;--mut:#8fa2cf;--cy:#2fd4ff;--ok:#2bd27a;--warn:#ffb020;--red:#ff5d6c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt);padding-bottom:90px}
+header{position:sticky;top:0;z-index:10;background:#0a1226ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-weight:800;letter-spacing:.5px;font-size:1.1rem}.logo b{color:var(--cy)}
+.right{display:flex;align-items:center;gap:8px}
+.st{font-size:.72rem;padding:4px 9px;border-radius:12px;border:1px solid var(--line);color:var(--mut)}
+.st.on{color:var(--ok);border-color:#1c6b49}.st.off{color:var(--warn);border-color:#7a5a12}
+.prem{background:linear-gradient(90deg,#1a7bff,#2fd4ff);color:#031024;border:0;border-radius:16px;padding:7px 12px;font-weight:700;font-size:.82rem;cursor:pointer}
+.wrap{max-width:760px;margin:auto;padding:14px}
+.hero{text-align:center;padding:10px 0 4px}
+.hero h1{font-size:1.4rem}.hero p{color:var(--mut);font-size:.9rem;margin-top:4px}
+form.sb{display:flex;gap:8px;margin:14px 0 10px}
+.sb input{flex:1;min-width:0;padding:14px 16px;border-radius:26px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:1rem;outline:none}
+.sb input:focus{border-color:var(--cy)}
+.sb button{border:0;background:var(--cy);color:#031024;font-weight:800;border-radius:26px;padding:0 20px;font-size:1rem;cursor:pointer}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:18px;padding:7px 14px;font-size:.88rem;cursor:pointer}
+.chip.on{background:var(--cy);color:#031024;border-color:var(--cy);font-weight:700}
+.meta{display:flex;justify-content:space-between;color:var(--mut);font-size:.8rem;margin:10px 2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.card:active{transform:scale(.99)}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:6px}
+.t-emploi{background:#103d2a;color:var(--ok)}.t-produit{background:#3b2c0b;color:var(--warn)}.t-savoir{background:#10325a;color:var(--cy)}.t-pub{background:#3a1530;color:#ff8ad8}
+.card h3{font-size:1rem;line-height:1.3}.card p{color:var(--mut);font-size:.88rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:.78rem;color:var(--mut)}.row b{color:var(--txt)}
+.empty{text-align:center;color:var(--mut);padding:36px 10px}
+.fab{position:fixed;right:16px;bottom:18px;z-index:12;background:var(--ok);color:#03210f;border:0;border-radius:28px;padding:14px 20px;font-weight:800;font-size:1rem;box-shadow:0 6px 20px #0008;cursor:pointer}
+.ov{position:fixed;inset:0;background:#000b;display:none;z-index:30;align-items:flex-end;justify-content:center}
+.ov.open{display:flex}
+.sheet{background:#0f1830;border:1px solid var(--line);border-radius:20px 20px 0 0;width:min(620px,100%);max-height:92vh;overflow:auto;padding:18px 16px 24px;display:flex;flex-direction:column;gap:10px}
+.sheet h2{font-size:1.15rem}.x{align-self:flex-end;background:none;border:0;color:var(--mut);font-size:1.8rem;cursor:pointer;line-height:1}
+.sheet label{font-size:.8rem;color:var(--mut)}
+.sheet input,.sheet select,.sheet textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:1rem;font-family:inherit}
+.sheet textarea{min-height:90px;resize:vertical}
+.btn{border:0;border-radius:24px;padding:13px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;background:var(--cy);color:#031024}
+.btn.g{background:var(--ok);color:#03210f}.btn.o{background:transparent;border:1px solid var(--cy);color:var(--cy)}
+.msg{font-size:.88rem;padding:9px 12px;border-radius:10px;display:none}.msg.ok{display:block;background:#103d2a;color:var(--ok)}.msg.err{display:block;background:#3a141a;color:var(--red)}
+.desc{white-space:pre-line;line-height:1.5;color:#d3def7;font-size:.95rem}
+.big{font-size:1.3rem;font-weight:800;color:var(--cy)}
+.mine{border-top:1px solid var(--line);padding-top:10px;font-size:.85rem;color:var(--mut)}.mine div{padding:5px 0;display:flex;justify-content:space-between;gap:8px}
+.note{font-size:.78rem;color:var(--mut)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">XACE <b>IA Search</b></div>
+  <div class="right"><span class="st" id="st">…</span><button class="prem" id="premBtn">Premium</button></div>
+</header>
+
+<div class="wrap">
+  <div class="hero"><h1>Cherche. Trouve. Publie.</h1><p>Emplois, produits et savoir-faire, même sans connexion.</p></div>
+  <form class="sb" id="sf"><input id="q" type="search" placeholder="Ex : maçon, soudure, vendeur, ciment…" autocomplete="off"><button>Chercher</button></form>
+  <div class="chips" id="chips"></div>
+  <div class="meta"><span id="count"></span><span id="sync"></span></div>
+  <div id="list"></div>
+</div>
+
+<button class="fab" id="pubBtn">+ Publier (gratuit)</button>
+
+<!-- Détail -->
+<div class="ov" id="ovD"><div class="sheet" id="detail"></div></div>
+
+<!-- Publier -->
+<div class="ov" id="ovP"><div class="sheet">
+  <button class="x" data-close>×</button>
+  <h2>Publier gratuitement</h2>
+  <p class="note">Votre publication est vérifiée puis apparaît pour tous les utilisateurs.</p>
+  <label>Type</label>
+  <select id="pType"><option value="produit">Produit à vendre</option><option value="emploi">Offre d'emploi</option><option value="savoir">Savoir-faire / connaissance</option><option value="pub">Publicité d'entreprise</option></select>
+  <label>Titre</label><input id="pTitre" maxlength="120" placeholder="Ex : Maçon qualifié disponible à Douala">
+  <label>Description</label><textarea id="pDesc" maxlength="2000" placeholder="Détails, conditions, étapes, prix…"></textarea>
+  <label>Catégorie</label><input id="pCat" maxlength="40" placeholder="Ex : Bâtiment, Agriculture, Mode…">
+  <label>Ville</label><input id="pVille" maxlength="40" placeholder="Ex : Douala">
+  <label>Prix en FCFA (optionnel)</label><input id="pPrix" type="number" inputmode="numeric" min="0">
+  <label>Numéro WhatsApp pour vous contacter</label><input id="pContact" inputmode="tel" placeholder="Ex : 6XXXXXXXX">
+  <div class="msg" id="pMsg"></div>
+  <button class="btn g" id="pSend">Publier</button>
+  <div class="mine" id="mine"></div>
+</div></div>
+
+<!-- Premium -->
+<div class="ov" id="ovM"><div class="sheet">
+  <button class="x" data-close>×</button>
+  <h2>XACE IA Search Premium</h2>
+  <div class="big" id="mPrix"></div>
+  <p class="desc" id="mTxt"></p>
+  <button class="btn o" id="mWa">Envoyer ma preuve de paiement sur WhatsApp</button>
+  <label>J'ai un code d'activation</label>
+  <input id="mCode" placeholder="XACE-XXXXXXXX" autocapitalize="characters">
+  <div class="msg" id="mMsg"></div>
+  <button class="btn" id="mAct">Activer mon abonnement</button>
+</div></div>
+
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s??"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const fmt=n=>Number(n).toLocaleString("fr-FR").replace(/ | /g," ")+" FCFA";
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const REAL=!!(CONFIG.SUPABASE_URL&&CONFIG.SUPABASE_ANON_KEY);
+const TYPES={emploi:"Emploi",produit:"Produit",savoir:"Savoir-faire",pub:"Pub"};
+const uid=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():"x"+Date.now()+Math.random().toString(16).slice(2);
+
+/* ---------- Données de démonstration ---------- */
+const SEED=[
+ {id:"d1",type:"savoir",titre:"Monter un mur en parpaings",categorie:"Bâtiment",ville:"Douala",vues:120,description:"1. Préparer les fondations et tracer l'alignement au cordeau.\n2. Poser la première rangée sur un lit de mortier, vérifier le niveau.\n3. Croiser les joints à chaque rangée.\n4. Chaîner avec du béton armé tous les 1,5 m de hauteur.\nAstuce : mouiller les parpaings avant de poser en saison sèche.",contact:""},
+ {id:"d2",type:"emploi",titre:"Maçon qualifié recherché",categorie:"Bâtiment",ville:"Douala",vues:340,prix:150000,description:"Entreprise de construction cherche 3 maçons avec 2 ans d'expérience. Contrat de chantier, paiement chaque fin de semaine.",contact:"237670752783"},
+ {id:"d3",type:"emploi",titre:"Vendeur(se) en boutique",categorie:"Commerce",ville:"Yaoundé",vues:210,prix:60000,description:"Boutique de vêtements au centre-ville cherche un(e) vendeur(se) sérieux(se), niveau 3ème minimum.",contact:"237670752783"},
+ {id:"d4",type:"produit",titre:"Pyjamas enfants – vente en gros",categorie:"Mode",ville:"Douala",vues:95,prix:4500,description:"Pyjamas enfants (Mickey, Spiderman, Hello Kitty). Prix de gros à partir de 12 pièces. Livraison partout au Cameroun.",contact:"237670752783"},
+ {id:"d5",type:"savoir",titre:"Souder un portail métallique",categorie:"Soudure",ville:"Bafoussam",vues:60,description:"Matériel : poste à souder, électrodes 2,5 mm, tubes carrés 40x40.\n1. Couper et ajuster les tubes.\n2. Pointer les angles à l'équerre.\n3. Souder par petits cordons pour éviter la déformation.\n4. Meuler, puis appliquer l'antirouille et la peinture.",contact:""},
+ {id:"d6",type:"produit",titre:"Panneaux solaires 200 W",categorie:"Énergie",ville:"Douala",vues:180,prix:95000,description:"Panneau solaire monocristallin 200 W, garantie 1 an. Installation possible. Contactez-nous pour le prix des batteries.",contact:"237670752783"},
+ {id:"d7",type:"savoir",titre:"Cultiver le maïs en saison des pluies",categorie:"Agriculture",ville:"Bamenda",vues:75,description:"Semer dès les premières grandes pluies, espacer les poquets de 80 x 40 cm, 2 grains par poquet. Désherber à 15 et 35 jours. Apporter l'engrais NPK au premier désherbage.",contact:""},
+ {id:"d8",type:"pub",titre:"Cours de soutien en maths et PCT – 3ème et Tle",categorie:"Éducation",ville:"Douala",vues:55,description:"Préparez vos séquences et vos examens avec un enseignant expérimenté. Petits groupes, tarifs accessibles.",contact:"237670752783"},
+ {id:"d9",type:"emploi",titre:"Livreur à moto",categorie:"Transport",ville:"Douala",vues:410,prix:80000,description:"Entreprise de livraison cherche livreurs avec moto et permis. Paiement à la course + prime.",contact:"237670752783"},
+ {id:"d10",type:"savoir",titre:"Fabriquer du savon liquide",categorie:"Petit commerce",ville:"Yaoundé",vues:130,description:"Ingrédients : base de savon, eau distillée, parfum, colorant. Chauffer l'eau, dissoudre la base, laisser refroidir, ajouter parfum et colorant, mettre en bidons. Possibilité de vendre en détail au marché.",contact:""}
+];
+
+/* ---------- État ---------- */
+let POSTS=[], filter="all", query="";
+let mine=LS.get("xace_mine",[]);
+const loadPosts=()=>{ if(!REAL){ return [...SEED,...LS.get("xace_demo_posts",[])]; } return LS.get("xace_cache",[]); };
+
+/* ---------- Réseau ---------- */
+const H=()=>({apikey:CONFIG.SUPABASE_ANON_KEY,Authorization:"Bearer "+CONFIG.SUPABASE_ANON_KEY,"Content-Type":"application/json"});
+const API=p=>CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/"+p;
+async function sync(){
+  if(!REAL||!navigator.onLine){updateStatus();return}
+  try{
+    const out=LS.get("xace_outbox",[]);
+    for(const row of out){const r=await fetch(API("posts"),{method:"POST",headers:{...H(),Prefer:"return=minimal"},body:JSON.stringify(row)});if(r.ok||r.status===409){LS.set("xace_outbox",LS.get("xace_outbox",[]).filter(x=>x.id!==row.id))}}
+    const vq=LS.get("xace_viewq",[]);
+    for(const id of vq){const r=await fetch(API("rpc/ajouter_vue"),{method:"POST",headers:H(),body:JSON.stringify({pid:id})});if(r.ok){LS.set("xace_viewq",LS.get("xace_viewq",[]).filter(x=>x!==id))}}
+    const r=await fetch(API("posts?select=*&approved=eq.true&order=created_at.desc&limit=1000"),{headers:H()});
+    if(r.ok){LS.set("xace_cache",await r.json());LS.set("xace_synced",Date.now());POSTS=loadPosts();render()}
+  }catch(e){}
+  updateStatus();
+}
+function updateStatus(){
+  const on=navigator.onLine,s=$("st");
+  s.textContent=on?"En ligne":"Hors ligne";s.className="st "+(on?"on":"off");
+  const t=LS.get("xace_synced",0);
+  $("sync").textContent=REAL?(t?"Mis à jour "+new Date(t).toLocaleDateString("fr-FR"):"Pas encore synchronisé"):"Mode démo";
+}
+window.addEventListener("online",sync);window.addEventListener("offline",updateStatus);
+
+/* ---------- Abonnement / quota ---------- */
+const subActive=()=>LS.get("xace_sub",0)>Date.now();
+function quotaLeft(){const d=new Date().toDateString(),q=LS.get("xace_q",{d:"",n:0});return q.d===d?Math.max(0,CONFIG.RECHERCHES_GRATUITES-q.n):CONFIG.RECHERCHES_GRATUITES}
+function useQuota(){const d=new Date().toDateString(),q=LS.get("xace_q",{d:"",n:0});LS.set("xace_q",q.d===d?{d,n:q.n+1}:{d,n:1})}
+
+/* ---------- Recherche ---------- */
+function score(p,toks){
+  const T=norm(p.titre),C=norm(p.categorie),D=norm(p.description),V=norm(p.ville);let s=0;
+  for(const t of toks){let m=0;if(T.includes(t))m+=3;if(C.includes(t))m+=2;if(V.includes(t))m+=1;if(D.includes(t))m+=1;if(!m)return 0;s+=m}
+  return s+Math.min(1,(p.vues||0)/1000);
+}
+function results(){
+  let L=POSTS.filter(p=>filter==="all"||p.type===filter);
+  const toks=norm(query).split(/\s+/).filter(Boolean);
+  if(toks.length){L=L.map(p=>[p,score(p,toks)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).map(x=>x[0])}
+  else L=[...L].sort((a,b)=>(b.vues||0)-(a.vues||0));
+  return L;
+}
+function render(){
+  const L=results();
+  $("count").textContent=L.length+" résultat"+(L.length>1?"s":"");
+  $("list").innerHTML=L.length?L.map(p=>`<div class="card" data-id="${esc(p.id)}"><span class="tag t-${esc(p.type)}">${esc(TYPES[p.type]||p.type)}</span>
+    <h3>${esc(p.titre)}</h3><p>${esc(p.description)}</p>
+    <div class="row">${p.prix?`<span><b>${fmt(p.prix)}</b></span>`:""}${p.ville?`<span>📍 ${esc(p.ville)}</span>`:""}${p.categorie?`<span>${esc(p.categorie)}</span>`:""}<span>👁 ${p.vues||0}</span></div></div>`).join("")
+    :'<div class="empty">Aucun résultat. Essayez un autre mot ou publiez ce que vous cherchez.</div>';
+  $("list").querySelectorAll(".card").forEach(c=>c.onclick=()=>openDetail(c.dataset.id));
+}
+function drawChips(){
+  const C=[["all","Tout"],["emploi","Emplois"],["produit","Produits"],["savoir","Savoir-faire"],["pub","Pubs"]];
+  $("chips").innerHTML=C.map(([k,l])=>`<button class="chip${filter===k?" on":""}" data-k="${k}">${l}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{filter=b.dataset.k;drawChips();render()});
+}
+$("sf").addEventListener("submit",e=>{
+  e.preventDefault();const v=$("q").value.trim();
+  if(v&&!subActive()){ if(quotaLeft()<=0){openPremium("Vous avez utilisé vos "+CONFIG.RECHERCHES_GRATUITES+" recherches gratuites du jour.");return} useQuota(); }
+  query=v;render();
+});
+
+/* ---------- Détail + vues ---------- */
+function addView(p){
+  p.vues=(p.vues||0)+1;
+  if(!REAL){const d=LS.get("xace_demo_posts",[]);const i=d.findIndex(x=>x.id===p.id);if(i>=0){d[i].vues=p.vues;LS.set("xace_demo_posts",d)}return}
+  const seen=LS.get("xace_seen",[]);if(seen.includes(p.id))return;seen.push(p.id);LS.set("xace_seen",seen.slice(-500));
+  LS.set("xace_viewq",[...LS.get("xace_viewq",[]),p.id]);sync();
+}
+function openDetail(id){
+  const p=POSTS.find(x=>String(x.id)===String(id));if(!p)return;addView(p);
+  const wa=String(p.contact||"").replace(/\D/g,"");
+  const full=wa.length===9?"237"+wa:wa;
+  $("detail").innerHTML=`<button class="x" data-close>×</button><span class="tag t-${esc(p.type)}" style="align-self:flex-start">${esc(TYPES[p.type]||p.type)}</span>
+    <h2>${esc(p.titre)}</h2>${p.prix?`<div class="big">${fmt(p.prix)}</div>`:""}
+    <div class="row">${p.ville?`<span>📍 ${esc(p.ville)}</span>`:""}${p.categorie?`<span>${esc(p.categorie)}</span>`:""}<span>👁 ${p.vues||0} vues</span></div>
+    <div class="desc">${esc(p.description)}</div>
+    ${full?`<button class="btn g" id="dWa">Contacter sur WhatsApp</button>`:""}`;
+  $("ovD").classList.add("open");bindClose($("ovD"));
+  if(full)$("dWa").onclick=()=>window.open("https://wa.me/"+full+"?text="+encodeURIComponent("Bonjour, je vous contacte depuis XACE IA Search au sujet de : "+p.titre),"_blank");
+  render();
+}
+
+/* ---------- Publication ---------- */
+function drawMine(){
+  $("mine").innerHTML=mine.length?"<b>Mes publications</b>"+mine.map(m=>{const p=POSTS.find(x=>x.id===m.id);return `<div><span>${esc(m.titre)}</span><span>${p?"En ligne · 👁 "+(p.vues||0):"En attente de validation"}</span></div>`}).join(""):"";
+}
+function say(id,t,ok){const e=$(id);e.textContent=t;e.className="msg "+(t?(ok?"ok":"err"):"")}
+$("pSend").onclick=async()=>{
+  const row={id:uid(),type:$("pType").value,titre:$("pTitre").value.trim(),description:$("pDesc").value.trim(),categorie:$("pCat").value.trim()||"Divers",
+    ville:$("pVille").value.trim(),prix:$("pPrix").value?Math.round(Number($("pPrix").value)):null,contact:$("pContact").value.trim()};
+  if(row.titre.length<3||row.description.length<10){say("pMsg","Ajoutez un titre (3 lettres minimum) et une description (10 lettres minimum).",false);return}
+  if(row.prix!==null&&(!isFinite(row.prix)||row.prix<0)){say("pMsg","Prix invalide.",false);return}
+  mine.unshift({id:row.id,titre:row.titre});LS.set("xace_mine",mine.slice(0,30));
+  if(REAL){LS.set("xace_outbox",[...LS.get("xace_outbox",[]),row]);sync();say("pMsg","Publication envoyée. Elle apparaîtra après vérification"+(navigator.onLine?".":" (dès que vous serez connecté)."),true)}
+  else{const d=LS.get("xace_demo_posts",[]);d.unshift({...row,vues:0});LS.set("xace_demo_posts",d);POSTS=loadPosts();render();say("pMsg","Publié (mode démo).",true)}
+  ["pTitre","pDesc","pCat","pVille","pPrix"].forEach(i=>$(i).value="");drawMine();
+};
+$("pubBtn").onclick=()=>{say("pMsg","");drawMine();$("ovP").classList.add("open");bindClose($("ovP"))};
+
+/* ---------- Premium ---------- */
+function openPremium(reason){
+  $("mPrix").textContent=fmt(CONFIG.PRIX_FCFA)+" / mois";
+  const left=subActive()?"Abonnement actif jusqu'au "+new Date(LS.get("xace_sub",0)).toLocaleDateString("fr-FR")+".\n\n":"";
+  $("mTxt").textContent=(reason?reason+"\n\n":"")+left+"Avec Premium : recherches illimitées, tous les résultats, mises à jour hors ligne.\n\nPour vous abonner : envoyez "+fmt(CONFIG.PRIX_FCFA)+" par MTN MoMo ou Orange Money au "+CONFIG.PAIEMENT_NUMERO+", puis envoyez la preuve sur WhatsApp. Vous recevrez un code à saisir ci-dessous.\n\nSans abonnement : "+CONFIG.RECHERCHES_GRATUITES+" recherches gratuites par jour (il vous en reste "+quotaLeft()+").";
+  say("mMsg","");$("ovM").classList.add("open");bindClose($("ovM"));
+}
+$("premBtn").onclick=()=>openPremium("");
+$("mWa").onclick=()=>window.open("https://wa.me/"+CONFIG.WHATSAPP+"?text="+encodeURIComponent("Bonjour, voici ma preuve de paiement de "+fmt(CONFIG.PRIX_FCFA)+" pour XACE IA Search Premium."),"_blank");
+$("mAct").onclick=async()=>{
+  const c=$("mCode").value.trim().toUpperCase();if(!c){say("mMsg","Saisissez votre code.",false);return}
+  let jours=0;
+  if(!REAL){jours=(c===CONFIG.CODE_DEMO.toUpperCase())?CONFIG.JOURS_ABONNEMENT:0}
+  else{
+    if(!navigator.onLine){say("mMsg","Connectez-vous à internet pour activer le code.",false);return}
+    try{const r=await fetch(API("rpc/activer_code"),{method:"POST",headers:H(),body:JSON.stringify({c})});jours=r.ok?(Number(await r.json())||0):0}catch(e){}
+  }
+  if(!jours){say("mMsg","Code invalide ou déjà utilisé.",false);return}
+  const base=Math.max(Date.now(),LS.get("xace_sub",0));LS.set("xace_sub",base+jours*86400000);
+  say("mMsg","Abonnement activé pour "+jours+" jours.",true);
+};
+
+/* ---------- Fenêtres ---------- */
+function bindClose(ov){ov.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>ov.classList.remove("open"));ov.onclick=e=>{if(e.target===ov)ov.classList.remove("open")}}
+
+/* ---------- Démarrage ---------- */
+POSTS=loadPosts();drawChips();render();updateStatus();sync();
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
